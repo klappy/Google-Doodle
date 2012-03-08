@@ -1,0 +1,76 @@
+<!doctype html>
+<html>
+<head>
+	<title>Google Doodle, Chrome Theme by Klappy</title>
+	<style type='text/css'>
+		@font-face { font-family: catull; src: url('catull.ttf'); }
+		body { font-family: helvetica, verdana; }
+		h1 { margin:0 0 38px 4px; padding:0; font-family: catull; font-size:168px; text-shadow: 5px 5px 7px #888; 
+			-webkit-box-reflect: below 0px -webkit-gradient(linear, left top, left bottom, from(transparent), to(rgba(255, 255, 255, 0.1)));
+		}
+		p { text-align:center; font-size:11px; text-shadow:1px 1px 2px #000; color:white; }
+		h1 span:nth-child(3n+1) { color:mediumblue; } 
+		h1 span:nth-child(4n+2) { color:firebrick; } 
+		h1 span:nth-child(4n+3) { width:96px; height:98px; color:transparent; text-shadow:none;}
+		h1 span:nth-child(5n+5) { color:seagreen; } 
+		#doodle { width: 550px; height:380px; margin:0 auto; padding-top:100px; }
+		canvas { display:block; background:#888; }
+		#chrome {
+			-webkit-border-radius: 110px; width:90px; height:87px; position:relative; z-index:-1; right:-233px; top:-162px; -webkit-box-shadow: 5px 5px 7px #888;
+			-webkit-box-reflect: below 73px -webkit-gradient(linear, left top, left bottom, from(transparent), to(rgba(255, 255, 255, 0.1)));
+		}
+		#wrapper { position:relative; top:-300px; opacity:0; -webkit-transition: opacity 1s linear; }
+		#wrapper:hover, #wrapper[pin='true'] { -webkit-transition: opacity 1s linear; opacity:0.9; }
+		#player { width:297px; height:167px; margin: 34px 0 0 125px; border-radius: 20px; -webkit-box-shadow: 5px 5px 7px #888; }
+		#player[enlarge='true'] { width:1280px; height:720px; margin: -100px 0 0 -365px; }
+		#controls { width:297px; margin:-35px 0 0 125px; background:#000; padding:10px 0 12px 0; border-radius:0 0 20px 20px; opacity:0.7; -webkit-transition: opacity 0.5s linear;}
+		#controls[enlarge='true'] { width:1280px; margin:-38px 0 0 -365px; font-size:14px; }
+		#controls[hide='true'] { opacity:0; -webkit-transition: opacity 0.5s linear;}
+		#controls span { cursor:pointer; }
+		#video { display:none; width:100%; }
+	</style>
+	<script type='text/javascript'>
+		var video;var chrome;var wrapper;var player;var controls;var chromeInterval;
+		function init(autostart){
+			video = document.getElementById('video'); chrome = document.getElementById('chrome');
+			wrapper = document.getElementById('wrapper'); player = document.getElementById('player');
+			controls = document.getElementById('controls'); hide();
+			chromeInterval = setInterval("chrome.getContext('2d').drawImage(video,-475,-80);", 33);
+			playerInterval = setInterval("player.getContext('2d').drawImage(video,0,0);", 33);
+			if (autostart==true){ setTimeout('playback("play");',2000); } 	}
+		function playback(action){
+			setTimeout('clearInterval(chromeInterval);',4000); video.playbackRate=1.0;
+			if (action!='pause'&&video.paused){ video.play(); } else if (action!='play'){ video.pause(); } 	}
+		function stop(){ video.pause(); video.currentTime=0;
+			setTimeout("chrome.getContext('2d').drawImage(video,-475,-80);", 1000); init(false);	}
+		function enlarge(){
+			if (player.getAttribute('enlarge')){ player.removeAttribute('enlarge'); controls.removeAttribute('enlarge');
+			} else { player.setAttribute('enlarge',true); controls.setAttribute('enlarge',true); }	}
+		function pin(){
+			if (wrapper.getAttribute('pin')){ wrapper.removeAttribute('pin');
+			} else { wrapper.setAttribute('pin',true); }	}
+		function hide(){
+			if (controls.getAttribute('hide')){ controls.removeAttribute('hide');
+			} else { controls.setAttribute('hide',true); }	}
+	</script>
+</head>
+<body onload='init(true);' title='Best viewed using Google Chrome.'>
+	<div id='doodle'>
+		<h1><span>G</span><span>o</span><span>o</span><span>g</span><span>l</span><span>e</span></h1>
+		<canvas id='chrome' width='375px' height='365px'></canvas>
+		<div id='wrapper'>
+			<canvas id='player' width='1280px' height='720px' onClick='hide();'></canvas>
+			<p id='controls'>
+				<span onclick='playback("play");'>Play</span> | <span onclick='playback("pause");'>Pause</span> | 
+				<span onclick='video.playbackRate=0.1;'>Slow</span> | <span onclick='video.playbackRate=2;'>Fast</span> |
+				<span onclick='stop();'>Stop</span> | <span onclick='video.muted=!video.muted;'>Mute</span> | 
+				<span onclick='enlarge();'>Enlarge</span> | <span onclick='pin();'>Pin</span>
+			</p>
+		</div>
+		<video id='video'>
+			<source src='./chrome.webm' type='video/webm'/>
+			<source src='http://s3.amazonaws.com/klapp/chrome.mp4' type='video/mp4'/>
+			<h2>Your device and/or browser does not support this video.</h2>
+		</video>
+	</div>
+</body>
